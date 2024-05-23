@@ -8,13 +8,14 @@
 -- dobo@dobo.sk
 
 CREATE OR REPLACE FUNCTION public.func_get_polygon_data_for_glm(p_material character varying, p_datation_before integer, p_datation_after integer, p_exclude_season integer DEFAULT NULL::integer)
- RETURNS TABLE(id_polygon integer, zemedel_prace integer, povrch integer, zvetralost integer, hustota_porostu integer, predchozi_plodina character varying, aktualni_plodina character varying, nalezy boolean, season integer, vlhkost character varying, season_polygon character varying, pocet_keramiky bigint)
+ RETURNS TABLE(id_polygon integer, season integer, zemedel_prace integer, povrch integer, zvetralost integer, hustota_porostu integer, predchozi_plodina character varying, aktualni_plodina character varying, nalezy boolean, vlhkost character varying, pocet_keramiky bigint)
  LANGUAGE plpgsql
 AS $function$
 BEGIN
     RETURN QUERY
     SELECT 
         p.id_polygon,
+	p.season,
         p.zemedel_prace,
         p.povrch,
         p.zvetralost,
@@ -22,9 +23,7 @@ BEGIN
         p.predchozi_plodina,
         p.aktualni_plodina,
         p.nalezy,
-        p.season,
         p.vlhkost,
-        p.season_polygon,
         COALESCE(f.pocet_keramiky, 0) AS pocet_keramiky
     FROM 
         tab_polygony_sezony p
